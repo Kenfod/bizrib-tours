@@ -12,6 +12,7 @@ function Tours() {
     <Row type="horizontal">
       <Heading as="h1">All Tour Trips</Heading>
       <p>TEST</p>
+      <img src="https://cfjjbqbneejeoomhtigx.supabase.co/storage/v1/object/public/tour-images/tour-001.png" />
     </Row>
   );
 }
