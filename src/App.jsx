@@ -15,7 +15,12 @@ function App() {
   return (
     <>
       <GlobalStyles />
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Routes>
           <Route element={<AppLayout />}>
             <Route index element={<Navigate replace to="dashboard" />} />
