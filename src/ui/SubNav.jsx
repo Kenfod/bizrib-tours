@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { AiFillTikTok } from "react-icons/ai";
 import {
@@ -12,31 +11,29 @@ import {
 const NavList = styled.ul`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 0.8rem;
 `;
 
-const StyledNavLink = styled(NavLink)`
+const StyledSocialLink = styled.a`
   &:link,
   &:visited {
     display: flex;
     align-items: center;
     gap: 1.2rem;
 
-    color: var(--color-grey-600);
+    color: var(--color-grey-700);
     font-size: 1.6rem;
     font-weight: 500;
     padding: 1.2rem 2.4rem;
+    border-radius: var(--border-radius-sm);
     transition: all 0.3s;
   }
 
-  /* This works because react-router places the active class on the active NavLink */
   &:hover,
-  &:active,
-  &.active:link,
-  &.active:visited {
+  &:active {
     color: var(--color-grey-800);
     background-color: var(--color-grey-200);
-    border-radius: var(--border-radius-sm);
   }
 
   & svg {
@@ -47,53 +44,60 @@ const StyledNavLink = styled(NavLink)`
   }
 
   &:hover svg,
-  &:active svg,
-  &.active:link svg,
-  &.active:visited svg {
+  &:active svg {
     color: var(--color-brand-600);
   }
 `;
 
+const socialLinks = [
+  {
+    name: "TikTok",
+    href: "https://tiktok.com",
+    icon: <AiFillTikTok />,
+  },
+  {
+    name: "Instagram",
+    href: "https://instagram.com",
+    icon: <FaSquareInstagram />,
+  },
+  {
+    name: "Facebook",
+    href: "https://facebook.com",
+    icon: <FaSquareFacebook />,
+  },
+  {
+    name: "WhatsApp",
+    href: "https://wa.me",
+    icon: <FaSquareWhatsapp />,
+  },
+  {
+    name: "X",
+    href: "https://x.com",
+    icon: <FaSquareXTwitter />,
+  },
+  {
+    name: "YouTube",
+    href: "https://youtube.com",
+    icon: <FaSquareYoutube />,
+  },
+];
+
 function SubNav() {
   return (
-    <nav>
+    <nav aria-label="Social media links">
       <NavList>
-        <li>
-          <StyledNavLink to="/">
-            <AiFillTikTok />
-            <span>TikTok</span>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/">
-            <FaSquareInstagram />
-            <span>Instagram</span>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/">
-            <FaSquareFacebook />
-            <span>Facebook</span>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/">
-            <FaSquareWhatsapp />
-            <span>WhatsApp</span>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/">
-            <FaSquareXTwitter />
-            <span> X </span>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/">
-            <FaSquareYoutube />
-            <span> YouTube </span>
-          </StyledNavLink>
-        </li>
+        {socialLinks.map((link) => (
+          <li key={link.name}>
+            <StyledSocialLink
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {link.icon}
+              <span>{link.name}</span>
+            </StyledSocialLink>
+          </li>
+        ))}
       </NavList>
     </nav>
   );
