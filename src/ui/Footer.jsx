@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import SubNav from "./SubNav";
 
 const StyledFooter = styled.footer`
   background-color: var(--color-grey-400);
@@ -12,7 +13,11 @@ const StyledFooter = styled.footer`
 `;
 
 function Footer() {
-  return <StyledFooter>FOOTER</StyledFooter>;
+  return (
+    <StyledFooter>
+      <SubNav />
+    </StyledFooter>
+  );
 }
 
 export default Footer;
