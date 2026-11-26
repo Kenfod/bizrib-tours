@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteTour } from "../../services/apiTours";
 
 const TableRow = styled.div`
   display: grid;
@@ -41,7 +43,22 @@ const Discount = styled.div`
 `;
 
 function TourRow({ tour }) {
-  const { name, maxCapacity, regularPrice, discount, image } = tour;
+  const { id: tourId, name, maxCapacity, regularPrice, discount, image } = tour;
+
+  const queryClient = useQueryClient();
+
+  const { isPending: isDeleting, mutate } = useMutation({
+    // mutationFn: (id) => deleteTour(id),
+    mutationFn: deleteTour,
+    onSuccess: () => {
+      alert("Tour trip successfully deleted");
+
+      queryClient.invalidateQueries({
+        queryKey: ["tours"],
+      });
+    },
+    onError: (err) => alert(err.message),
+  });
 
   return (
     <TableRow role="row">
@@ -50,7 +67,9 @@ function TourRow({ tour }) {
       <div>{maxCapacity} guests</div>
       <Price>{formatCurrency(regularPrice)}</Price>
       <Discount>{formatCurrency(discount)}</Discount>
-      <button>Delete</button>
+      <button onClick={() => mutate(tourId)} disabled={isDeleting}>
+        Delete
+      </button>
     </TableRow>
   );
 }

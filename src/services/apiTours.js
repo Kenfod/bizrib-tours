@@ -10,3 +10,14 @@ export async function getTours() {
 
   return data;
 }
+
+export async function deleteTour(id) {
+  const { data, error } = await supabase.from("tours").delete().eq("id", id);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Tour trip could not be deleted");
+  }
+
+  return data;
+}

@@ -9,6 +9,7 @@ const Table = styled.div`
 
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
+  padding: 1.2rem 1.8rem;
   border-radius: 7px;
   overflow: hidden;
 `;
@@ -19,7 +20,7 @@ const TableHeader = styled.header`
   column-gap: 2.4rem;
   align-items: center;
 
-  background-color: var(--color-grey-50);
+  background-color: var(--color-grey-100);
   border-bottom: 1px solid var(--color-grey-100);
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -34,7 +35,7 @@ function TourTable() {
     data: tours,
     error,
   } = useQuery({
-    queryKey: ["tour"],
+    queryKey: ["tours"],
     queryFn: getTours,
   });
 
