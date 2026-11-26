@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import styled from "styled-components";
+import Footer from "./Footer";
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -23,6 +24,7 @@ function AppLayout() {
       <Main>
         <Outlet />
       </Main>
+      <Footer />
     </StyledAppLayout>
   );
 }
