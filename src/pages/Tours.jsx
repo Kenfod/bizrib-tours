@@ -19,7 +19,7 @@ function Tours() {
         <TourTable />
 
         <Button onClick={() => setShowForm((show) => !show)}>
-          Add new Tour
+          Add New Tour
         </Button>
         {showForm && <CreateTourForm />}
       </Row>

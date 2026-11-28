@@ -1,60 +1,26 @@
-import styled from "styled-components";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
+import FormRow from "../../ui/FormRow";
+
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { createTour } from "../../services/apiTours";
 
-const FormRow = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 24rem 1fr 1.2fr;
-  gap: 2.4rem;
-
-  padding: 1.2rem 0;
-
-  &:first-child {
-    padding-top: 0;
-  }
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-
-  &:has(button) {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1.2rem;
-  }
-`;
-
-const Label = styled.label`
-  font-weight: 500;
-`;
-
-const Error = styled.span`
-  font-size: 1.4rem;
-  color: var(--color-red-700);
-`;
-
 function CreateTourForm() {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, getValues, formState } = useForm();
+  const { errors } = formState;
 
   const queryClient = useQueryClient();
 
   const { mutate, isPending: isCreating } = useMutation({
     mutationFn: createTour,
     onSuccess: () => {
-      toast.success("New Tour Trip successfully created");
+      toast.success("New Tour Route successfully created");
       queryClient.invalidateQueries({ queryKey: ["tours"] });
       reset();
     },
@@ -65,45 +31,88 @@ function CreateTourForm() {
     mutate(data);
   }
 
+  function onError(errors) {
+    // console.log(errors);
+  }
+
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
-      <FormRow>
-        <Label htmlFor="name">Tour name</Label>
-        <Input type="text" id="name" {...register("name")} />
-      </FormRow>
-
-      <FormRow>
-        <Label htmlFor="maxCapacity">Maximum capacity</Label>
-        <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
-      </FormRow>
-
-      <FormRow>
-        <Label htmlFor="regularPrice">Regular price</Label>
-        <Input type="number" id="regularPrice" {...register("regularPrice")} />
-      </FormRow>
-
-      <FormRow>
-        <Label htmlFor="discount">Discount</Label>
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+      <FormRow label="Tour Trip" error={errors?.name?.message}>
         <Input
-          type="number"
-          id="discount"
-          defaultValue={0}
-          {...register("discount")}
+          type="text"
+          id="name"
+          disabled={isCreating}
+          {...register("name", {
+            required: "This field is required",
+          })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="description">Description for website</Label>
+      <FormRow label="Maximum Capacity" error={errors?.maxCapacity?.message}>
+        <Input
+          type="number"
+          id="maxCapacity"
+          disabled={isCreating}
+          {...register("maxCapacity", {
+            required: "This field is required",
+            min: {
+              value: 1,
+              message: "Capacity should be at least 1 person",
+            },
+          })}
+        />
+      </FormRow>
+
+      <FormRow
+        label="Regular Price [US$]"
+        error={errors?.regularPrice?.message}
+      >
+        <Input
+          type="number"
+          id="regularPrice"
+          disabled={isCreating}
+          {...register("regularPrice", {
+            required: "This field is required",
+            min: {
+              value: 150,
+              message: "Price should be at least $150",
+            },
+          })}
+        />
+      </FormRow>
+
+      <FormRow label="Discount  [US$]" error={errors?.discount?.message}>
+        <Input
+          type="number"
+          id="discount"
+          disabled={isCreating}
+          defaultValue={0}
+          {...register("discount", {
+            required: "This field is required",
+            validate: (value) =>
+              Number(value) <= Number(getValues().regularPrice) ||
+              "Discount should be less than regular price",
+          })}
+        />
+      </FormRow>
+
+      <FormRow
+        label="Description for website"
+        disabled={isCreating}
+        error={errors?.description?.message}
+      >
         <Textarea
           type="text"
           id="description"
           defaultValue=""
-          {...register("description")}
+          disabled={isCreating}
+          {...register("description", {
+            required: "This field is required",
+          })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="image">Tour photo</Label>
+      <FormRow label="Tour Photo">
         <FileInput id="image" accept="image/*" />
       </FormRow>
 
@@ -112,7 +121,7 @@ function CreateTourForm() {
         <Button $variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isCreating}>Add Tour</Button>
+        <Button disabled={isCreating}>Add Tour Trip</Button>
       </FormRow>
     </Form>
   );
